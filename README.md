@@ -46,3 +46,5 @@
 
 ## Standout Suggestions
 *TODO (Optional):* This is where you can provide information about any standout suggestions that you have attempted.
+
+https://docs.google.com/document/d/18lJAYS-H7xSuCYe67PEwnO__HJss1WRck5dsUi4OPd0/edit
