@@ -15,12 +15,66 @@ The dataset was registered into the workspace via URI of the public Heart Failur
 ![alt dataset registered](screenshots/1-dataset-registered.png)
 
 ## Automated ML
-*TODO*: Give an overview of the `automl` settings and configuration you used for this experiment
+The AutoML experiment used the following key settings, mostly to limit the compute time and cost.
+
+* Time limit for experimentation is 30 minutes
+* Iteration should time out in 5 minutes
+* Max cores per iteration set to -1
+* Max concurrent iterations set to 4
+* Early stopping has been enabled
+* pThe primary metric has been set for accuracy
+* Uses 3 fold cross validation
+* Limit the number of concurrent iteration to 4
+* Featurization enabled to allow AutoML to evaludate different feature engineering of the numerical features
+
+```
+automl_settings = {
+    "experiment_timeout_minutes" : 30,
+    "iteration_timeout_minutes": 5,
+    "max_cores_per_iteration": -1,
+    "max_concurrent_iterations": 4,
+    "enable_early_stopping" : True,
+    "primary_metric": 'accuracy',
+    "n_cross_validations": 3,
+    "featurization": 'auto',
+    "verbosity": logging.INFO,
+}
+
+automl_config = AutoMLConfig(
+    task="classification",
+    compute_target=compute_target,
+    training_data= train,
+    label_column_name="DEATH_EVENT",
+    debug_log = 'automl_errors.log',
+    **automl_settings)
+```
 
 ### Results
-*TODO*: What are the results you got with your automated ML model? What were the parameters of the model? How could you have improved it?
+The best model from Auto ML is a VotingEnsemble with an AUC Weighted score of **0.9950**.
 
-*TODO* Remeber to provide screenshots of the `RunDetails` widget as well as a screenshot of the best model trained with it's parameters.
+Completed run
+![alt dataset registered](screenshots/1-completed-run.png)
+![alt dataset registered](screenshots/2-completed-run.png)
+
+Automl models
+![alt dataset registered](screenshots/3-automl-models.png)
+
+Completed run in Notebook
+![alt dataset registered](screenshots/4-notebook-run-completed.png)
+![alt dataset registered](screenshots/5-notebook-remote-run-completed.png)
+
+Best run
+![alt dataset registered](screenshots/6-best-run.png)
+
+Best run metrics
+![alt dataset registered](screenshots/7-best-run-with-metrics.png)
+![alt dataset registered](screenshots/7-best-run-with-metrics-2.png)
+
+Best run in Notebook
+![alt dataset registered](screenshots/8-notebook-best-run.png)
+
+Best run metrics in Notebook
+![alt dataset registered](screenshots/9-notebook-best-run-with-metrics.png)
 
 ## Hyperparameter Tuning
 *TODO*: What kind of model did you choose for this experiment and why? Give an overview of the types of parameters and their ranges used for the hyperparameter search
