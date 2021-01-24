@@ -53,28 +53,28 @@ automl_config = AutoMLConfig(
 The best model from Auto ML is a VotingEnsemble with an AUC Weighted score of **0.9950**.
 
 Completed run
-![alt dataset registered](screenshots/1-completed-run.png)
-![alt dataset registered](screenshots/2-completed-run.png)
+![alt dataset registered](screenshots/automl/1-completed-run.png)
+![alt dataset registered](screenshots/automl/2-completed-run.png)
 
 Automl models
-![alt dataset registered](screenshots/3-automl-models.png)
+![alt dataset registered](screenshots/automl/3-automl-models.png)
 
 Completed run in Notebook
-![alt dataset registered](screenshots/4-notebook-run-completed.png)
-![alt dataset registered](screenshots/5-notebook-remote-run-completed.png)
+![alt dataset registered](screenshots/automl/4-notebook-run-completed.png)
+![alt dataset registered](screenshots/automl/5-notebook-remote-run-completed.png)
 
 Best run
-![alt dataset registered](screenshots/6-best-run.png)
+![alt dataset registered](screenshots/automl/6-best-run.png)
 
 Best run metrics
-![alt dataset registered](screenshots/7-best-run-with-metrics.png)
-![alt dataset registered](screenshots/7-best-run-with-metrics-2.png)
+![alt dataset registered](screenshots/automl/7-best-run-with-metrics.png)
+![alt dataset registered](screenshots/automl/7-best-run-with-metrics-2.png)
 
 Best run in Notebook
-![alt dataset registered](screenshots/8-notebook-best-run.png)
+![alt dataset registered](screenshots/automl/8-notebook-best-run.png)
 
 Best run metrics in Notebook
-![alt dataset registered](screenshots/9-notebook-best-run-with-metrics.png)
+![alt dataset registered](screenshots/automl/9-notebook-best-run-with-metrics.png)
 
 ## Hyperparameter Tuning
 *TODO*: What kind of model did you choose for this experiment and why? Give an overview of the types of parameters and their ranges used for the hyperparameter search
