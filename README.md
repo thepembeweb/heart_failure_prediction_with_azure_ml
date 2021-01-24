@@ -50,7 +50,7 @@ automl_config = AutoMLConfig(
 ```
 
 ### Results
-The best model from Auto ML is a VotingEnsemble with an AUC Weighted score of **0.9950**.
+The best model from Auto ML is a VotingEnsemble with an AUC Weighted score of **0.88281**.
 
 Completed run
 ![alt completed run](screenshots/automl/2-completed-run.png)
