@@ -17,7 +17,7 @@ ds = TabularDatasetFactory.from_delimited_files(['https://archive.ics.uci.edu/ml
 # Split data into train and test sets.
 x = ds.to_pandas_dataframe()
 y = x.pop("DEATH_EVENT")
-x_train,x_test,y_train,y_test = train_test_split(x,y,random_state=0)
+x_train,x_test,y_train,y_test = train_test_split(x,y,random_state=0, test_size=0.2)
 
 run = Run.get_context()
 
