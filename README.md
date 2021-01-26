@@ -7,6 +7,22 @@ This project demonstrates how to use an external dataset in a Microsoft Azure Ma
 ### Overview
 To make predictions about heart failure, we used the open source [Heart Failure Prediction](https://www.kaggle.com/andrewmvd/heart-failure-clinical-data/) dataset from kaggle  to build a classification model. This dataset uses 12 clinical features for predicting death events by heart failure.
 
+'''
+- age: age of the patient (years)
+- anaemia: decrease of red blood cells or hemoglobin (boolean)
+- high blood pressure: if the patient has hypertension (boolean)
+- creatinine phosphokinase (CPK): level of the CPK enzyme in the blood (mcg/L)
+- diabetes: if the patient has diabetes (boolean)
+- ejection fraction: percentage of blood leaving the heart at each contraction (percentage)
+- platelets: platelets in the blood (kiloplatelets/mL)
+- sex: woman or man (binary)
+- serum creatinine: level of serum creatinine in the blood (mg/dL)
+- serum sodium: level of serum sodium in the blood (mEq/L)
+- smoking: if the patient smokes or not (boolean)
+- time: follow-up period (days)
+- death event: if the patient deceased during the follow-up period (boolean)
+'''
+
 ### Task
 Our goal is to find the best classification model for predicting death events by heart failure. We will build the models using hyperdrive and automl API from azureml. Given the 12 clinical features in the dataset our model will use DEATH_EVENT as the target column (binary: “1”, means “Yes”, “0” means “No”)
 
