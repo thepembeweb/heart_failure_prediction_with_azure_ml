@@ -132,19 +132,133 @@ Completed run
 ![alt completed run](screenshots/hyperdrive/1-run-completed.png)
 
 Run details
-![alt completed run](screenshots/hyperdrive/2-child-runs.png)
-![alt completed run](screenshots/hyperdrive/3-child-runs.png)
+![alt child-runs](screenshots/hyperdrive/2-child-runs.png)
+![alt child-runs](screenshots/hyperdrive/3-child-runs.png)
 
 Run details in notebook
-![alt completed run](screenshots/hyperdrive/4-run-details-completed.png)
+![alt run details completed](screenshots/hyperdrive/4-run-details-completed.png)
 
 Best model and metrics
-![alt completed run](screenshots/hyperdrive/5-best-model.png)
-![alt completed run](screenshots/hyperdrive/6-best-model-with-accuracy.png)
-![alt completed run](screenshots/hyperdrive/7-best-model-with-metrics.png)
+![alt best model](screenshots/hyperdrive/5-best-model.png)
+![alt best model with accuracy](screenshots/hyperdrive/6-best-model-with-accuracy.png)
+![alt best model with metrics](screenshots/hyperdrive/7-best-model-with-metrics.png)
 
 ## Model Deployment
-*TODO*: Give an overview of the deployed model and instructions on how to query the endpoint with a sample input.
+After comparing the above two models, the best model was the AutoML experiment with a higher accuracy of **0.88281**.
+
+The AutoML model was then deployed as follows:
+
+1. Get the best model from the training run
+    ```
+    model_name = best_run.properties['model_name']
+    script_file_name = 'inference/score.py'
+    best_run.download_file('outputs/scoring_file_v_1_0_0.py', 'inference/score.py')
+    ```
+2. Register the model
+    ```
+    description = 'Heart Failure Prediction AutoML Model'
+    tags = None
+    model = remote_run.register_model(model_name = model_name, description = description, tags = tags)
+    print(model.name, model.id, model.version, sep='\t')
+    ```
+3. Download the score python file from azure ml
+4. Create an inference configuration
+5. Create an ACI deployment configuration
+6. Deploy the model
+7. Enable Application Insights
+    ```
+    from azureml.core.model import InferenceConfig
+    from azureml.core.webservice import AciWebservice
+    from azureml.core.webservice import Webservice
+    from azureml.core.model import Model
+    from azureml.core.environment import Environment
+
+    inference_config = InferenceConfig(entry_script='inference/score.py')
+
+    deployment_config = AciWebservice.deploy_configuration(cpu_cores = 1, 
+                                                   memory_gb = 1, 
+                                                   tags = {'type': "automl_classification"}, 
+                                                   description = 'Heart Failure Prediction AutoML Service')
+
+    deploy_service_name = 'automl-model-deployment'
+    service = Model.deploy(ws, deploy_service_name, [model], inference_config, deployment_config)
+
+    service.wait_for_deployment(show_output = True)
+
+    # Enable Application Insights
+    service.update(enable_app_insights=True)
+
+    print('Service State:', service.state, sep='\n')
+    print('Service Scoring URI:', service.scoring_uri, sep='\n')
+    print('Service Swagger URI:', service.swagger_uri, sep='\n')
+    ```    
+
+To consume the model
+1. We copy the rest endpoint
+2. Create a sample JSON payload and post the payload to the endpoint using a HTTP Post 
+    ```    
+    import requests
+    import json
+
+    scoring_uri = service.scoring_uri
+
+    data = {"data":
+            [
+              { 
+                "age": 80,
+                "anaemia": 1,
+                "creatinine_phosphokinase": 146,
+                "diabetes": 1,
+                "ejection_fraction": 20,
+                "high_blood_pressure": 0,
+                "platelets": 127000,
+                "serum_creatinine": 9.4,
+                "serum_sodium": 137,
+                "sex": 1,
+                "smoking": 1,
+                "time": 104
+              },
+              {
+                "age": 42,
+                "anaemia": 1,
+                "creatinine_phosphokinase": 111,
+                "diabetes": 0,
+                "ejection_fraction": 38,
+                "high_blood_pressure": 1,
+                "platelets": 87000,
+                "serum_creatinine": 0.8,
+                "serum_sodium": 116,
+                "sex":0,
+                "smoking": 0,
+                "time": 13
+              },
+          ]
+        }
+
+    input_data = json.dumps(data)
+    headers = {'Content-Type': 'application/json'}
+    resp = requests.post(scoring_uri, input_data, headers=headers)
+    print(resp.json())
+    ```    
+
+3. Running endpoint 
+
+    ```    
+    Running.........................................
+    Succeeded
+    ACI service creation operation finished, operation "Succeeded"
+    Service State:
+    Healthy
+    Service Scoring URI:
+    http://357c9640-97d9-4585-a0be-dd03c068da9f.southcentralus.azurecontainer.io/score
+    Service Swagger URI:
+    http://357c9640-97d9-4585-a0be-dd03c068da9f.southcentralus.azurecontainer.io/swagger.json
+
+    ```    
+
+![alt deployment 1](screenshots/deployment/1-deployment.png)
+![alt deployment 2](screenshots/deployment/2-deployment.png)
+
 
 ## Screen Recording
 [Screencast on YouTube](https://youtu.be/B8iwyPZ3j3k)
@@ -157,8 +271,8 @@ Best model and metrics
 
 ## Authors
 
-* **[Pemberai Sweto](https://github.com/thepembeweb)** - *Initial work* - [Operationalizing Machine Learning pipeline in Azure
-](https://github.com/thepembeweb/operationalizing_machine_learning_in_azure)
+* **[Pemberai Sweto](https://github.com/thepembeweb)** - *Initial work* - [Heart Failure Prediction with Azure ML
+](https://github.com/thepembeweb/heart_failure_prediction_with_azure_ml)
 
 ## License
 
