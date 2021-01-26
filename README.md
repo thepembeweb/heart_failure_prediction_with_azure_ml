@@ -6,7 +6,6 @@ This project demonstrates how to use an external dataset in a Microsoft Azure Ma
 
 ### Overview
 To make predictions about heart failure, we used the open source [Heart Failure Prediction](https://www.kaggle.com/andrewmvd/heart-failure-clinical-data/) dataset from kaggle  to build a classification model. This dataset uses 12 clinical features for predicting death events by heart failure.
-
 ```
 - age: age of the patient (years)
 - anaemia: decrease of red blood cells or hemoglobin (boolean)
