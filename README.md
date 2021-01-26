@@ -76,13 +76,72 @@ Best run metrics in Notebook
 ![alt notebook best run with metrics](screenshots/automl/9-notebook-best-run-with-metrics.png)
 
 ## Hyperparameter Tuning
-*TODO*: What kind of model did you choose for this experiment and why? Give an overview of the types of parameters and their ranges used for the hyperparameter search
 
+The pipeline architecture is as follows:
+
+* Data loaded from TabularDatasetFactory
+* Dataset is further cleaned using a function called clean_data
+* One Hot Encoding has been used for the categorical columns
+* Dataset has been splitted into train and test sets
+* Built a Logistic Regression model
+* Hyperparameters has been tuned using Hyperdrive
+* Selected the best model
+* Saved the model 
+
+**Benefits of the parameter sampler chosen**
+The project used Random Sampling as it supports early termination of low-performance runs. In random sampling, hyperparameter values are randomly selected from the defined search space with two hyperparameters '--C' (Reqularization Strength) and '--max_iter' (Maximum iterations to converge).
+Random sampling search is also faster, allows more coverage of the search space and parameter values are chosen from a set of discrete values or a distribution over a continuous range.
+
+**The benefits of the early stopping policy chosen**
+The Bandit policy was chosen because it stops a run if the target performance metric underperforms the best run so far by a specified margin. It ensures that we don't keep running the experiment running for too long and end up wasting resources and time looking for the optimal parameter. It is based on slack criteria and a frequency and delay interval for evaluation. Any run that doesn't fall within the slack factor or slack amount of the evaluation metric with respect to the best performing run will be terminated.
+
+```
+early_termination_policy = BanditPolicy(slack_factor = 0.1, evaluation_interval = 1, delay_evaluation=5)
+
+ps = RandomParameterSampling(
+    {
+        "--C" :        choice(0.001,0.01,0.1, 0.5, 1,1.5,10,20,50,100,200,500,1000),
+        "--max_iter" : choice(25,50,75,100,200,300)
+    }
+)
+
+src = ScriptRunConfig(source_directory='.',
+                      script='train.py',
+                      compute_target=compute_target,
+                      environment=sklearn_env)
+
+hyperdrive_run_config =  HyperDriveConfig(
+    hyperparameter_sampling = ps, 
+    policy = early_termination_policy,
+    primary_metric_name = 'Accuracy',
+    primary_metric_goal = PrimaryMetricGoal.MAXIMIZE, 
+    max_total_runs = 100,
+    max_concurrent_runs = 4,
+    run_config = src
+)
+```
 
 ### Results
-*TODO*: What are the results you got with your model? What were the parameters of the model? How could you have improved it?
+The HyperDrive model resulted in an accuracy of 0.8333 which was slightly lower than the AutoML accuracy.
 
-*TODO* Remeber to provide screenshots of the `RunDetails` widget as well as a screenshot of the best model trained with it's parameters.
+Compared to HyperDrive, AutoML architecture is quite superior, which enables to training 'n' number of models efficiently.
+
+The reason in accuracies might be due to the fact that that we used less number of iterations in AutoML run, which might give better results with more iterations. AutoML also provides a wide variety of models and preprocessing steps which are not carried out Hyperdrive. However, the difference was quite small.
+
+Completed run
+![alt completed run](screenshots/hyperdrive/1-run-completed.png)
+
+Run details
+![alt completed run](screenshots/hyperdrive/2-child-runs.png)
+![alt completed run](screenshots/hyperdrive/3-child-runs.png)
+
+Run details in notebook
+![alt completed run](screenshots/hyperdrive/4-run-details-completed.png)
+
+Best model and metrics
+![alt completed run](screenshots/hyperdrive/5-best-model.png)
+![alt completed run](screenshots/hyperdrive/6-best-model-with-accuracy.png)
+![alt completed run](screenshots/hyperdrive/7-best-model-with-metrics.png)
 
 ## Model Deployment
 *TODO*: Give an overview of the deployed model and instructions on how to query the endpoint with a sample input.
